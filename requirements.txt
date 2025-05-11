@@ -1,0 +1,4 @@
+
+ipykernel==6.29.5
+osm-bot-abstraction-layer==0.0.22
+osm_iterator==1.6.0

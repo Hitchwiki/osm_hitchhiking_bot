@@ -1,0 +1,35 @@
+from osm_bot_abstraction_layer.generic_bot_retagging import run_simple_retagging_task
+
+def edit_element(tags):
+    if "amenity" in tags.keys():
+        tags.pop('hitchhiking', None)
+        tags.pop('amenity', None)
+        tags["highway"] = "hitchhiking"
+        tags["bench"] = "yes"
+    
+    return tags
+
+hitchhiking_local_download = """
+/*
+
+*/
+[out:xml][timeout:25];
+// gather results
+nwr["hitchhiking"="local"];
+// print results
+out geom;
+"""
+
+def main():
+    run_simple_retagging_task(
+        max_count_of_elements_in_one_changeset=500,
+        objects_to_consider_query=hitchhiking_local_download,
+        cache_folder_filepath='./cache',
+        is_in_manual_mode=False,
+        changeset_comment='For amenity=bench with hitchhiking=local the node should be treated similar to hitchway=bus_stp using highway=hitchhiking.',
+        discussion_url='https://wiki.openstreetmap.org/wiki/Talk:Mechanical_Edits/TillWenke/moving_hitchhiking_stops_to_%27highway%3Dhitchhiking%27_(mainly_in_Europe/Germany)',
+        osm_wiki_documentation_page='https://wiki.openstreetmap.org/wiki/Mechanical_Edits/TillWenke/moving_hitchhiking_stops_to_%27highway%3Dhitchhiking%27_(mainly_in_Europe/Germany)',
+        edit_element_function=edit_element,
+    )
+
+main()
